@@ -3,6 +3,7 @@ package com.silentswitch;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.recyclerview.widget.DividerItemDecoration;
 
 import android.app.NotificationManager;
 import android.content.Context;
@@ -18,12 +19,15 @@ import android.widget.LinearLayout;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.silentswitch.databinding.ActivityMainBinding;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
     private ActivityMainBinding binding;
     private  BottomSheetDialog bottomSheetDialog;
     private ViewModel viewModel;
+    private MainRecycleAdapter adapter;
+    private List<SilentModel> silentModels;
     private static final String TAG = "MainActivity";
 
     @Override
@@ -32,12 +36,19 @@ public class MainActivity extends AppCompatActivity {
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
+        silentModels = new ArrayList<>();
+        adapter = new MainRecycleAdapter(silentModels, this);
+        binding.recycleView.setAdapter(adapter);
+        DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(this, DividerItemDecoration.VERTICAL);
+        binding.recycleView.addItemDecoration(dividerItemDecoration);
+
         viewModel = new  ViewModelProvider(this).get(ViewModel.class);
 
         viewModel.getAllTime().observe(this, new Observer<List<SilentModel>>() {
             @Override
             public void onChanged(List<SilentModel> silentModels) {
                 Log.d(TAG, "onChanged: "+silentModels);
+                adapter.setSilentModels(silentModels);
             }
         });
 
@@ -48,14 +59,7 @@ public class MainActivity extends AppCompatActivity {
             bottomSheetDialog.show();
         });
 
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                SilentRoomDatabase.getInstance(MainActivity.this)
-                        .switchDao()
-                        .getDateAll("1688920740000");
-            }
-        }).start();
+
     }
     public void requestMutePermissions() {
         try {

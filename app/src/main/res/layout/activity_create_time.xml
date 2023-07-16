@@ -31,6 +31,7 @@
                     android:layout_marginTop="3dp">
 
                     <EditText
+                        android:id="@+id/title"
                         style="@style/Widget.Material3.TextInputEditText.OutlinedBox"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -223,16 +224,18 @@
                             android:layout_below="@id/silent_mode"
                             android:text="Phone will automatically silent." />
 
-                        <androidx.appcompat.widget.SwitchCompat
+                        <Switch
+                            tools:ignore="UseSwitchCompatOrMaterialXml"
                             android:id="@+id/statusSwitch"
                             android:layout_width="wrap_content"
                             android:layout_height="50dp"
                             android:layout_alignParentEnd="true"
                             android:layout_gravity="end"
                             android:layout_marginEnd="10dp"
+                            android:checked="true"
                             android:textStyle="bold"
                             android:thumb="@drawable/thump"
-                            app:track="@drawable/track_thump" />
+                            android:track="@drawable/track_thump" />
 
                     </RelativeLayout>
 
@@ -265,14 +268,15 @@
                             android:layout_below="@id/vibrate_mode"
                             android:text="Phone will automatically Vibrate." />
 
-                        <androidx.appcompat.widget.SwitchCompat
+                        <Switch
+                            tools:ignore="UseSwitchCompatOrMaterialXml"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_alignParentEnd="true"
                             android:layout_centerVertical="true"
                             android:layout_marginEnd="10dp"
                             android:thumb="@drawable/thump"
-                            app:track="@drawable/track_thump"
+                            android:track="@drawable/track_thump"
                             />
 
                     </RelativeLayout>
@@ -283,7 +287,7 @@
 
             <Button
                 android:id="@+id/save"
-                android:layout_margin="30dp"
+                android:layout_margin="20dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="Save"

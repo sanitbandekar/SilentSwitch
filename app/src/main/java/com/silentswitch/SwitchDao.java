@@ -17,5 +17,8 @@ public interface SwitchDao {
     LiveData<List<SilentModel>> getAllTime();
 
     @Query("SELECT * FROM SILENT_TABLE WHERE startTime  <= :time")
-    List<SilentModel> getDateAll(String time);
+    List<SilentModel> getStartTimeAll(String time);
+
+    @Query("SELECT * FROM SILENT_TABLE WHERE endTime  <= :time")
+    List<SilentModel> getEndTimeAll(String time);
 }
