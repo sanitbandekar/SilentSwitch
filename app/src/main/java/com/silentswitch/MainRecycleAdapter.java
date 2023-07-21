@@ -5,6 +5,7 @@ import android.text.format.DateUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -15,10 +16,12 @@ import java.util.List;
 public class MainRecycleAdapter extends RecyclerView.Adapter<MainRecycleAdapter.ViewHolder> {
     List<SilentModel> silentModels;
     private Context context;
+    private OnItemClick onItemClick;
 
-    public MainRecycleAdapter(List<SilentModel> silentModels, Context context) {
+    public MainRecycleAdapter(List<SilentModel> silentModels, Context context, OnItemClick onItemClick) {
         this.silentModels = silentModels;
         this.context = context;
+        this.onItemClick = onItemClick;
     }
 
     public void setSilentModels(List<SilentModel> silentModels) {
@@ -53,12 +56,27 @@ public class MainRecycleAdapter extends RecyclerView.Adapter<MainRecycleAdapter.
 
     public class ViewHolder extends RecyclerView.ViewHolder {
         private TextView title, startTime, endTime;
+        private LinearLayout layout;
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
 
+            layout = itemView.findViewById(R.id.time_item);
             title = itemView.findViewById(R.id.title);
             startTime = itemView.findViewById(R.id.start_time_item);
             endTime = itemView.findViewById(R.id.end_time_item);
+
+            layout.setOnLongClickListener(new View.OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View view) {
+                    SilentModel silentModel = silentModels.get(getAdapterPosition());
+                    onItemClick.OnClick(silentModel);
+                    return false;
+                }
+            });
         }
+    }
+
+    public interface OnItemClick{
+        void OnClick(SilentModel silentModel);
     }
 }

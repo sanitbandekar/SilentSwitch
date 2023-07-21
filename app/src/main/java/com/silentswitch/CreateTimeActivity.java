@@ -6,14 +6,19 @@ import android.app.TimePickerDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Looper;
+import android.os.VibrationEffect;
+import android.os.Vibrator;
 import android.util.Log;
 import android.view.View;
+import android.widget.CompoundButton;
 import android.widget.TimePicker;
-import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 
 import com.google.android.material.snackbar.Snackbar;
 import com.silentswitch.databinding.ActivityCreateTimeBinding;
@@ -31,7 +36,9 @@ public class CreateTimeActivity extends AppCompatActivity {
     private Calendar startCalendar, endCalender;
     private AlarmManager alarmManager;
     private PendingIntent pendingIntent;
+    private Vibrator mVibrator;
     private static final String TAG = "CreateTimeActivity";
+    private static final long[] VIBRATE_PATTERN = {500, 500};
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,13 +46,55 @@ public class CreateTimeActivity extends AppCompatActivity {
         binding = ActivityCreateTimeBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
-        binding.save.setOnClickListener(new View.OnClickListener() {
+        Toolbar toolbar = binding.toolbar;
+        setSupportActionBar(toolbar);
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+            getSupportActionBar().setDisplayShowHomeEnabled(true);
+        }
+
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
+                finish();
             }
         });
 
+        binding.vibrateSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                binding.silentSwitch.setChecked(!b);
+
+                mVibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
+
+                if (!b) {
+                    mVibrator.cancel();
+                } else {
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                        // API 26 and above
+                        Log.d(TAG, "vibrate");
+                        mVibrator.vibrate(VibrationEffect.createWaveform(VIBRATE_PATTERN, 0));
+                        final Handler handler = new Handler(Looper.getMainLooper());
+                        handler.postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                mVibrator.cancel();
+                            }
+                        }, 2000);
+                    } else {
+                        // Below API 26
+                        mVibrator.vibrate(100);
+                    }
+                }
+            }
+        });
+
+        binding.silentSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                binding.vibrateSwitch.setChecked(!b);
+            }
+        });
 
         binding.startTimeHolder.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -130,13 +179,16 @@ public class CreateTimeActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 if (binding.title.getText().toString().length() != 0) {
-                    SilentModel silentModel = new SilentModel(binding.title.getText().toString(), startCalendar.getTimeInMillis(), endCalender.getTimeInMillis(), "monday", false);
+                    binding.prosess.setVisibility(View.VISIBLE);
+                    SilentModel silentModel = new SilentModel(binding.title.getText().toString(), startCalendar.getTimeInMillis(), endCalender.getTimeInMillis(), "monday", binding.vibrateSwitch.isChecked(), false);
                     insertPatient(silentModel);
-                    setAlarm(startCalendar,140);
+                    setAlarm(startCalendar, 140);
                     new Handler().postDelayed(new Runnable() {
                         @Override
                         public void run() {
-                            setAlarm(endCalender,138);
+                            setAlarm(endCalender, 138);
+                            binding.prosess.setVisibility(View.VISIBLE);
+                            finish();
                         }
                     }, 3000);
                 } else {
@@ -176,7 +228,7 @@ public class CreateTimeActivity extends AppCompatActivity {
         alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(),
                 AlarmManager.INTERVAL_DAY, pendingIntent);
 
-        Toast.makeText(this, "Alarm set Successfully", Toast.LENGTH_SHORT).show();
+//        Toast.makeText(this, "Alarm set Successfully", Toast.LENGTH_SHORT).show();
 
 
     }

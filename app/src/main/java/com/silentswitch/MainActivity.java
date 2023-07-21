@@ -11,6 +11,8 @@ import android.content.Intent;
 import android.media.AudioManager;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.VibrationEffect;
+import android.os.Vibrator;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -22,7 +24,7 @@ import com.silentswitch.databinding.ActivityMainBinding;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements MainRecycleAdapter.OnItemClick {
     private ActivityMainBinding binding;
     private  BottomSheetDialog bottomSheetDialog;
     private ViewModel viewModel;
@@ -37,7 +39,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(binding.getRoot());
 
         silentModels = new ArrayList<>();
-        adapter = new MainRecycleAdapter(silentModels, this);
+        adapter = new MainRecycleAdapter(silentModels, this,this);
         binding.recycleView.setAdapter(adapter);
         DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(this, DividerItemDecoration.VERTICAL);
         binding.recycleView.addItemDecoration(dividerItemDecoration);
@@ -48,15 +50,20 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onChanged(List<SilentModel> silentModels) {
                 Log.d(TAG, "onChanged: "+silentModels);
-                adapter.setSilentModels(silentModels);
+                if (silentModels != null) {
+                    adapter.setSilentModels(silentModels);
+                }else {
+                    binding.isEmpty.setVisibility(View.GONE);
+
+                }
             }
         });
-
 
         requestMutePermissions();
         showBottomSheetDialog();
         binding.floatingActionButton.setOnClickListener(view -> {
             bottomSheetDialog.show();
+
         });
 
 
@@ -104,6 +111,7 @@ public class MainActivity extends AppCompatActivity {
         LinearLayout time_based = view.findViewById(R.id.time_based);
 
         time_based.setOnClickListener(v -> {
+            bottomSheetDialog.dismiss();
             Intent intent = new Intent(MainActivity.this, CreateTimeActivity.class);
             startActivity(intent);
         });
@@ -112,5 +120,18 @@ public class MainActivity extends AppCompatActivity {
 //        LinearLayout download = bottomSheetDialog.findViewById(R.id.download);
 //        LinearLayout delete = bottomSheetDialog.findViewById(R.id.delete);
         bottomSheetDialog.setContentView(view);
+    }
+
+    @Override
+    public void OnClick(SilentModel silentModel) {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                 SilentRoomDatabase.getInstance(MainActivity.this)
+                        .switchDao()
+                        .deleteTime(silentModel);
+
+            }
+        }).start();
     }
 }

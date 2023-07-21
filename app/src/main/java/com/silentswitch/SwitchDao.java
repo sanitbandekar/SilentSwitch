@@ -2,8 +2,10 @@ package com.silentswitch;
 
 import androidx.lifecycle.LiveData;
 import androidx.room.Dao;
+import androidx.room.Delete;
 import androidx.room.Insert;
 import androidx.room.Query;
+import androidx.room.Update;
 
 import java.util.List;
 
@@ -12,6 +14,11 @@ public interface SwitchDao {
 
     @Insert()
     void insertTime(SilentModel silentModel);
+    @Delete()
+    void deleteTime(SilentModel silentModel);
+
+    @Query("UPDATE SILENT_TABLE SET isAlarm = 1 WHERE id = :id")
+    void updateAlaram(String id);
 
     @Query("SELECT * FROM SILENT_TABLE")
     LiveData<List<SilentModel>> getAllTime();
