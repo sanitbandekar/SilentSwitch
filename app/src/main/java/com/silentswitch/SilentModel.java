@@ -29,14 +29,18 @@ public class SilentModel {
     @ColumnInfo(name = "isAlarm")
     private boolean isAlarm;
 
+    @ColumnInfo(name = "isActive")
+    private boolean isActive;
 
-    public SilentModel(String name, long startTime, long endTime, String day, boolean isSilent, boolean isAlarm) {
+
+    public SilentModel(String name, long startTime, long endTime, String day, boolean isSilent, boolean isAlarm, boolean isActive) {
         this.name = name;
         this.startTime = startTime;
         this.endTime = endTime;
         this.day = day;
         this.isSilent = isSilent;
         this.isAlarm = isAlarm;
+        this.isActive = isActive;
     }
 
     public int getId() {
@@ -93,6 +97,14 @@ public class SilentModel {
 
     public void setAlarm(boolean alarm) {
         isAlarm = alarm;
+    }
+
+    public boolean isActive() {
+        return isActive;
+    }
+
+    public void setActive(boolean active) {
+        isActive = active;
     }
 
     @Override

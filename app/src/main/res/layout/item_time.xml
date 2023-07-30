@@ -86,6 +86,7 @@
                 android:text="9:15 PM"/>
         </LinearLayout>
         <Switch
+            android:id="@+id/isActiveSwitch"
             tools:ignore="UseSwitchCompatOrMaterialXml"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

@@ -5,7 +5,9 @@ import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.DividerItemDecoration;
 
+import android.app.AlarmManager;
 import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.media.AudioManager;
@@ -52,9 +54,9 @@ public class MainActivity extends AppCompatActivity implements MainRecycleAdapte
                 Log.d(TAG, "onChanged: "+silentModels);
                 if (silentModels != null) {
                     adapter.setSilentModels(silentModels);
-                }else {
-                    binding.isEmpty.setVisibility(View.GONE);
-
+                    if (silentModels.size() !=0){
+                        binding.isEmpty.setVisibility(View.GONE);
+                    }
                 }
             }
         });
@@ -133,5 +135,16 @@ public class MainActivity extends AppCompatActivity implements MainRecycleAdapte
 
             }
         }).start();
+    }
+
+    @Override
+    public void isActivated(boolean b) {
+        if (!b) {
+            AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+            Intent intent = new Intent(this, AlarmReceiver.class);
+            PendingIntent mAlarmPendingIntent = PendingIntent.getActivity(this, 140, intent, PendingIntent.FLAG_MUTABLE);
+
+            alarmManager.cancel(mAlarmPendingIntent);
+        }
     }
 }

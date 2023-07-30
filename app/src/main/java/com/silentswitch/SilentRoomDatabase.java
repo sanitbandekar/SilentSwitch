@@ -7,7 +7,7 @@ import androidx.room.Room;
 import androidx.room.RoomDatabase;
 import androidx.room.TypeConverters;
 
-@Database(entities = {SilentModel.class}, version = 1, exportSchema = false)
+@Database(entities = {SilentModel.class,ContactModel.class}, version = 1, exportSchema = false)
 @TypeConverters({Converters.class})
 public abstract class SilentRoomDatabase extends RoomDatabase {
 

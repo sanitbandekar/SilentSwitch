@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">SilentSwitch</string>
+    <string name="rationale_camera">This app needs access to your SMS and Call Log so you can take pictures.</string>
+
 </resources>

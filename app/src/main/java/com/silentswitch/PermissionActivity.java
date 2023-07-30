@@ -64,7 +64,7 @@ public class PermissionActivity extends AppCompatActivity {
     private void goToHome() {
         NotificationManager mNotificationManager = (NotificationManager) this.getSystemService(Context.NOTIFICATION_SERVICE);
         if (mNotificationManager.isNotificationPolicyAccessGranted()) {
-            Intent intent =new Intent(this, MainActivity.class);
+            Intent intent =new Intent(this, BasicPermissionActivity.class);
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
             startActivity(intent);
         }

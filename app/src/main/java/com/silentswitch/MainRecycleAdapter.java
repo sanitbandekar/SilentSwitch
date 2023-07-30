@@ -5,10 +5,13 @@ import android.text.format.DateUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CompoundButton;
 import android.widget.LinearLayout;
+import android.widget.Switch;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.widget.SwitchCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.List;
@@ -47,6 +50,7 @@ public class MainRecycleAdapter extends RecyclerView.Adapter<MainRecycleAdapter.
 
         holder.startTime.setText(sTime);
         holder.endTime.setText(endTime);
+        holder.aSwitch.setChecked(silentModel.isActive());
     }
 
     @Override
@@ -57,6 +61,7 @@ public class MainRecycleAdapter extends RecyclerView.Adapter<MainRecycleAdapter.
     public class ViewHolder extends RecyclerView.ViewHolder {
         private TextView title, startTime, endTime;
         private LinearLayout layout;
+        private Switch aSwitch;
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
 
@@ -64,7 +69,14 @@ public class MainRecycleAdapter extends RecyclerView.Adapter<MainRecycleAdapter.
             title = itemView.findViewById(R.id.title);
             startTime = itemView.findViewById(R.id.start_time_item);
             endTime = itemView.findViewById(R.id.end_time_item);
+            aSwitch = itemView.findViewById(R.id.isActiveSwitch);
 
+            aSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                @Override
+                public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                    onItemClick.isActivated(b);
+                }
+            });
             layout.setOnLongClickListener(new View.OnLongClickListener() {
                 @Override
                 public boolean onLongClick(View view) {
@@ -78,5 +90,6 @@ public class MainRecycleAdapter extends RecyclerView.Adapter<MainRecycleAdapter.
 
     public interface OnItemClick{
         void OnClick(SilentModel silentModel);
+        void isActivated(boolean b);
     }
 }

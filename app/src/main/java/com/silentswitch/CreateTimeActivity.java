@@ -180,7 +180,7 @@ public class CreateTimeActivity extends AppCompatActivity {
             public void onClick(View view) {
                 if (binding.title.getText().toString().length() != 0) {
                     binding.prosess.setVisibility(View.VISIBLE);
-                    SilentModel silentModel = new SilentModel(binding.title.getText().toString(), startCalendar.getTimeInMillis(), endCalender.getTimeInMillis(), "monday", binding.vibrateSwitch.isChecked(), false);
+                    SilentModel silentModel = new SilentModel(binding.title.getText().toString(), startCalendar.getTimeInMillis(), endCalender.getTimeInMillis(), "monday", binding.vibrateSwitch.isChecked(), false,true);
                     insertPatient(silentModel);
                     setAlarm(startCalendar, 140);
                     new Handler().postDelayed(new Runnable() {
