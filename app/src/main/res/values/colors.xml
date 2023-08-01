@@ -6,6 +6,10 @@
     <color name="unchecked">#6E78BA</color>
     <color name="lightGray">#767678</color>
 
+    <color name="divider">#BDBDBD</color>
+
+    <color name="bg">#F1F3F6</color>
+
     <color name="red">#C80000</color>
     <color name="DarkGreen">#085E0A</color>
 </resources>

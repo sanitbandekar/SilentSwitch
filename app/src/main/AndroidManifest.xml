@@ -26,6 +26,13 @@
         android:theme="@style/Theme.SilentSwitch"
         tools:targetApi="31">
         <activity
+            android:name=".MessageActivity"
+            android:exported="false" />
+        <activity
+            android:windowSoftInputMode="adjustResize"
+            android:name=".SettingActivity"
+            android:exported="false" />
+        <activity
             android:name=".BasicPermissionActivity"
             android:exported="false" />
         <activity
