@@ -2,5 +2,6 @@
     <string name="app_name">SilentSwitch</string>
     <string name="rationale_camera">This app needs access to your SMS and Call Log so you can take pictures.</string>
     <string name="sorry_i_m_not_available_at_the_minute">Sorry, I’m not available at the minute</string>
+    <string name="title_activity_maps">MapsActivity</string>
 
 </resources>

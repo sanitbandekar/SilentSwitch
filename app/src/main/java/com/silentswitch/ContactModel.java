@@ -1,12 +1,15 @@
 package com.silentswitch;
 
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.DiffUtil;
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 
 @Entity(tableName = "contact_table")
 public class ContactModel {
-    @PrimaryKey
+
+    @PrimaryKey(autoGenerate = true)
     @ColumnInfo(name = "id")
     private int id;
     @ColumnInfo(name = "name")
@@ -44,5 +47,25 @@ public class ContactModel {
         this.id = id;
     }
 
+    @Override
+    public String toString() {
+        return "ContactModel{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", number='" + number + '\'' +
+                '}';
+    }
 
+    public  static  DiffUtil.ItemCallback<ContactModel> itemCallback = new DiffUtil.ItemCallback<ContactModel>() {
+
+        @Override
+        public boolean areItemsTheSame(@NonNull ContactModel oldItem, @NonNull ContactModel newItem) {
+            return oldItem.getId() == newItem.getId();
+        }
+
+        @Override
+        public boolean areContentsTheSame(@NonNull ContactModel oldItem, @NonNull ContactModel newItem) {
+            return oldItem.equals(newItem);
+        }
+    };
 }

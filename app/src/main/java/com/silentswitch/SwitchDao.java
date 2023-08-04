@@ -23,6 +23,15 @@ public interface SwitchDao {
     @Query("SELECT * FROM SILENT_TABLE")
     LiveData<List<SilentModel>> getAllTime();
 
+    @Query("SELECT * FROM CONTACT_TABLE")
+    LiveData<List<ContactModel>> getContact();
+
+    @Insert()
+    void insertContact(ContactModel contactModel);
+
+    @Delete()
+    void deleteContact(ContactModel contactModel);
+
     @Query("SELECT * FROM SILENT_TABLE WHERE startTime  <= :time")
     List<SilentModel> getStartTimeAll(String time);
 

@@ -2,11 +2,14 @@ package com.silentswitch;
 
 import android.Manifest;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
 
 import com.silentswitch.databinding.ActivityBasicPermissionBinding;
 
@@ -17,14 +20,19 @@ import pub.devrel.easypermissions.EasyPermissions;
 
 public class BasicPermissionActivity extends AppCompatActivity implements EasyPermissions.PermissionCallbacks {
     private static final int RC_CAMERA_AND_LOCATION = 5648;
+    private static final int PERMISSION_REQUEST_CODE = 8965;
     private ActivityBasicPermissionBinding binding;
-    String[] perms = {android.Manifest.permission.SEND_SMS, android.Manifest.permission.READ_CALL_LOG, Manifest.permission.READ_PHONE_STATE};
+    private static final String TAG = "BasicPermissionActivity";
+    String[] perms = {android.Manifest.permission.SEND_SMS, android.Manifest.permission.READ_CALL_LOG, Manifest.permission.READ_PHONE_STATE, Manifest.permission.ACCESS_FINE_LOCATION};
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         binding = ActivityBasicPermissionBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
+            if (Build.VERSION.SDK_INT > 32) {
+                 perms = new String[]{Manifest.permission.POST_NOTIFICATIONS, Manifest.permission.SEND_SMS, Manifest.permission.READ_CALL_LOG, Manifest.permission.READ_PHONE_STATE, Manifest.permission.ACCESS_FINE_LOCATION};
+            }
 
         if (EasyPermissions.hasPermissions(this, perms)) {
             gotoHome();
@@ -72,4 +80,6 @@ public class BasicPermissionActivity extends AppCompatActivity implements EasyPe
             new AppSettingsDialog.Builder(this).build().show();
         }
     }
+
+
 }

@@ -92,7 +92,7 @@ public class AlarmReceiver extends BroadcastReceiver {
         try {
             if (Build.VERSION.SDK_INT < 23) {
                 AudioManager audioManager = (AudioManager) context.getSystemService(Context.AUDIO_SERVICE);
-                audioManager.setRingerMode(AudioManager.RINGER_MODE_SILENT);
+                audioManager.setRingerMode(AudioManager.RINGER_MODE_NORMAL);
             } else if (Build.VERSION.SDK_INT >= 23) {
                 this.normalDoNotDisturb(context);
             }

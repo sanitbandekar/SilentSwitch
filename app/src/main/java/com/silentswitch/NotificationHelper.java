@@ -46,12 +46,12 @@ public class NotificationHelper extends ContextWrapper {
     public void sendHighPriorityNotification(String title, String body, Class activityName) {
 
         Intent intent = new Intent(this, activityName);
-        PendingIntent pendingIntent = PendingIntent.getActivity(this, 267, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+        PendingIntent pendingIntent = PendingIntent.getActivity(this, 267, intent, PendingIntent.FLAG_MUTABLE);
 
         Notification notification = new NotificationCompat.Builder(this, CHANNEL_ID)
 //                .setContentTitle(title)
 //                .setContentText(body)
-//                .setSmallIcon(R.drawable.ic_notifications_active_black_24dp)
+                .setSmallIcon(R.drawable.ic_launcher_foreground)
                 .setPriority(NotificationCompat.PRIORITY_HIGH)
                 .setStyle(new NotificationCompat.BigTextStyle().setSummaryText("summary").setBigContentTitle(title).bigText(body))
                 .setContentIntent(pendingIntent)

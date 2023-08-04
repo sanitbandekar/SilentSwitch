@@ -120,6 +120,16 @@ public class MainActivity extends AppCompatActivity implements MainRecycleAdapte
         View view = LayoutInflater.from(this).inflate(R.layout.bottom_sheet_home, null);
 
         LinearLayout time_based = view.findViewById(R.id.time_based);
+        LinearLayout location = view.findViewById(R.id.location_based);
+
+        location.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                bottomSheetDialog.dismiss();
+                Intent intent = new Intent(MainActivity.this, MapsActivity.class);
+                startActivity(intent);
+            }
+        });
 
         time_based.setOnClickListener(v -> {
             bottomSheetDialog.dismiss();

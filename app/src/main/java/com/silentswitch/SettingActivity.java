@@ -37,5 +37,13 @@ public class SettingActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+
+        binding.contact.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(SettingActivity.this, AddContactActivity.class);
+                startActivity(intent);
+            }
+        });
     }
 }
