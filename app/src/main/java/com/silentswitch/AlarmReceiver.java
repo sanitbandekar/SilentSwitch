@@ -48,7 +48,7 @@ public class AlarmReceiver extends BroadcastReceiver {
                     Log.d(TAG, "run: normal" + list);
                     for (int i = 0; i < list.size(); i++) {
 
-                        if (list.get(i).isAlarm()) {
+                        if (list.get(i).getAlarm()) {
                             requestUnMutePermissions(context);
                         }else {
                             upDateAlaram(context,String.valueOf(list.get(i).getId()));

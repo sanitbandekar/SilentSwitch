@@ -225,8 +225,7 @@ public class CreateTimeActivity extends AppCompatActivity {
 
         pendingIntent = PendingIntent.getBroadcast(this, code, intent, PendingIntent.FLAG_MUTABLE);
 
-        alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(),
-                AlarmManager.INTERVAL_DAY, pendingIntent);
+        alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis()+100, pendingIntent);
 
 //        Toast.makeText(this, "Alarm set Successfully", Toast.LENGTH_SHORT).show();
 

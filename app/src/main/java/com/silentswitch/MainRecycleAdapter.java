@@ -11,7 +11,6 @@ import android.widget.Switch;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.widget.SwitchCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.List;
@@ -50,7 +49,7 @@ public class MainRecycleAdapter extends RecyclerView.Adapter<MainRecycleAdapter.
 
         holder.startTime.setText(sTime);
         holder.endTime.setText(endTime);
-        holder.aSwitch.setChecked(silentModel.isActive());
+        holder.aSwitch.setChecked(silentModel.getActive());
     }
 
     @Override
@@ -74,7 +73,8 @@ public class MainRecycleAdapter extends RecyclerView.Adapter<MainRecycleAdapter.
             aSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
                 @Override
                 public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-                    onItemClick.isActivated(b);
+                    SilentModel silentModel = silentModels.get(getAdapterPosition());
+                    onItemClick.isActivated(b,silentModel);
                 }
             });
             layout.setOnLongClickListener(new View.OnLongClickListener() {
@@ -90,6 +90,6 @@ public class MainRecycleAdapter extends RecyclerView.Adapter<MainRecycleAdapter.
 
     public interface OnItemClick{
         void OnClick(SilentModel silentModel);
-        void isActivated(boolean b);
+        void isActivated(boolean b, SilentModel silentModel);
     }
 }

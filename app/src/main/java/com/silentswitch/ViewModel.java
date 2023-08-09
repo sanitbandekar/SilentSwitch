@@ -21,6 +21,9 @@ public class ViewModel extends AndroidViewModel {
         return silentRoomDatabase.switchDao().getAllTime();
     }
 
+    public LiveData<List<SilentModel>> getStatusSilent(){
+        return silentRoomDatabase.switchDao().getStatusSilent();
+    }
     public LiveData<List<ContactModel>> getContact(){
         return silentRoomDatabase.switchDao().getContact();
     }

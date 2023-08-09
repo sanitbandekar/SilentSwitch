@@ -5,9 +5,12 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.FragmentActivity;
 
+import android.app.NotificationManager;
 import android.app.PendingIntent;
+import android.content.Context;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
+import android.media.AudioManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
@@ -62,6 +65,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             @Override
             public void onClick(View view) {
                 mMap.clear();
+                requestUnMutePermissions(getApplicationContext());
             }
         });
     }
@@ -162,6 +166,28 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         addMarker(latLng);
         addCircle(latLng, GEOFENCE_RADIUS);
         addGeofence(latLng, GEOFENCE_RADIUS);
+    }
+    public void requestUnMutePermissions(Context context) {
+        try {
+            if (Build.VERSION.SDK_INT < 23) {
+                AudioManager audioManager = (AudioManager) context.getSystemService(Context.AUDIO_SERVICE);
+                audioManager.setRingerMode(AudioManager.RINGER_MODE_NORMAL);
+            } else if (Build.VERSION.SDK_INT >= 23) {
+                this.normalDoNotDisturb(context);
+            }
+        } catch (SecurityException e) {
+            Log.e(TAG, "requestMutePermissions: ", e);
+        }
+    }
+
+    private void normalDoNotDisturb(Context context) {
+
+        NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
+        // if user granted access else ask for permission
+        if (notificationManager.isNotificationPolicyAccessGranted()) {
+            AudioManager audioManager = (AudioManager) context.getSystemService(Context.AUDIO_SERVICE);
+            audioManager.setRingerMode(AudioManager.RINGER_MODE_NORMAL);
+        }
     }
 
     private void addGeofence(LatLng latLng, float radius) {

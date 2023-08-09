@@ -43,6 +43,7 @@ public class SilentModel {
         this.isActive = isActive;
     }
 
+
     public int getId() {
         return id;
     }
@@ -91,7 +92,7 @@ public class SilentModel {
         isSilent = silent;
     }
 
-    public boolean isAlarm() {
+    public boolean getAlarm() {
         return isAlarm;
     }
 
@@ -99,7 +100,7 @@ public class SilentModel {
         isAlarm = alarm;
     }
 
-    public boolean isActive() {
+    public boolean getActive() {
         return isActive;
     }
 
@@ -117,6 +118,7 @@ public class SilentModel {
                 ", day='" + day + '\'' +
                 ", isSilent=" + isSilent +
                 ", isAlarm=" + isAlarm +
+                ", isActive=" + isActive +
                 '}';
     }
 }

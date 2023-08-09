@@ -1,7 +1,6 @@
 package com.silentswitch;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
@@ -15,15 +14,12 @@ import android.content.Intent;
 import android.media.AudioManager;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.VibrationEffect;
-import android.os.Vibrator;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.LinearLayout;
-import android.widget.Toolbar;
 
 import com.google.android.material.appbar.MaterialToolbar;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
@@ -38,6 +34,7 @@ public class MainActivity extends AppCompatActivity implements MainRecycleAdapte
     private ViewModel viewModel;
     private MainRecycleAdapter adapter;
     private List<SilentModel> silentModels;
+    private PreferenceManager preferenceManager;
     private static final String TAG = "MainActivity";
 
     @Override
@@ -45,6 +42,7 @@ public class MainActivity extends AppCompatActivity implements MainRecycleAdapte
         super.onCreate(savedInstanceState);
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
+        preferenceManager = new PreferenceManager(this);
 
         MaterialToolbar toolbar = binding.toolbar;
         setSupportActionBar(toolbar);
@@ -70,7 +68,23 @@ public class MainActivity extends AppCompatActivity implements MainRecycleAdapte
             }
         });
 
-        requestMutePermissions();
+        viewModel.getStatusSilent().observe(this, new Observer<List<SilentModel>>() {
+            @Override
+            public void onChanged(List<SilentModel> silentModels) {
+                Log.d(TAG, "getStatusSilent: "+silentModels);
+                if (silentModels != null){
+                    if (silentModels.size() == 0){
+                        Log.d(TAG, "onChanged: "+silentModels.size());
+                        requestUnMutePermissions();
+                        preferenceManager.putBoolean(Constants.isService, false);
+                    }else {
+                        preferenceManager.putBoolean(Constants.isService, true);
+                    }
+                }
+            }
+        });
+
+
         showBottomSheetDialog();
         binding.floatingActionButton.setOnClickListener(view -> {
             bottomSheetDialog.show();
@@ -79,11 +93,11 @@ public class MainActivity extends AppCompatActivity implements MainRecycleAdapte
 
 
     }
-    public void requestMutePermissions() {
+    public void requestUnMutePermissions() {
         try {
             if (Build.VERSION.SDK_INT < 23) {
                 AudioManager audioManager = (AudioManager)getApplicationContext().getSystemService(Context.AUDIO_SERVICE);
-                audioManager.setRingerMode(AudioManager.RINGER_MODE_SILENT);
+                audioManager.setRingerMode(AudioManager.RINGER_MODE_NORMAL);
             } else if( Build.VERSION.SDK_INT >= 23 ) {
                 this.requestForDoNotDisturbPermissionOrSetDoNotDisturbForApi23AndUp();
             }
@@ -97,8 +111,8 @@ public class MainActivity extends AppCompatActivity implements MainRecycleAdapte
         NotificationManager notificationManager = (NotificationManager) getApplicationContext().getSystemService(Context.NOTIFICATION_SERVICE);
         // if user granted access else ask for permission
         if ( notificationManager.isNotificationPolicyAccessGranted()) {
-//            AudioManager audioManager = (AudioManager) getApplicationContext().getSystemService(Context.AUDIO_SERVICE);
-//            audioManager.setRingerMode(AudioManager.RINGER_MODE_SILENT);
+            AudioManager audioManager = (AudioManager) getApplicationContext().getSystemService(Context.AUDIO_SERVICE);
+            audioManager.setRingerMode(AudioManager.RINGER_MODE_NORMAL);
         } else{
             // Open Setting screen to ask for permisssion
             Intent intent = new Intent(android.provider.Settings.ACTION_NOTIFICATION_POLICY_ACCESS_SETTINGS);
@@ -157,7 +171,7 @@ public class MainActivity extends AppCompatActivity implements MainRecycleAdapte
     }
 
     @Override
-    public void isActivated(boolean b) {
+    public void isActivated(boolean b, SilentModel silentModel) {
         if (!b) {
             AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
             Intent intent = new Intent(this, AlarmReceiver.class);
@@ -165,6 +179,15 @@ public class MainActivity extends AppCompatActivity implements MainRecycleAdapte
 
             alarmManager.cancel(mAlarmPendingIntent);
         }
+
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                SilentRoomDatabase.getInstance(getApplicationContext())
+                        .switchDao()
+                        .updateSilentMode(String.valueOf(silentModel.getId()),b);
+            }
+        }).start();
     }
 
     @Override
