@@ -45,6 +45,7 @@ public class CreateTimeActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         binding = ActivityCreateTimeBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
+        NotificationHelper notificationHelper = new NotificationHelper(this);
 
         Toolbar toolbar = binding.toolbar;
         setSupportActionBar(toolbar);
@@ -188,6 +189,7 @@ public class CreateTimeActivity extends AppCompatActivity {
                         public void run() {
                             setAlarm(endCalender, 138);
                             binding.prosess.setVisibility(View.VISIBLE);
+                            notificationHelper.sendHighPriorityNotification("Silent Switch activated", "", MapsActivity.class);
                             finish();
                         }
                     }, 3000);
