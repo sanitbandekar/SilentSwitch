@@ -26,6 +26,10 @@ public class MessageActivity extends AppCompatActivity {
                     preferenceManager.putString(Constants.MSG, binding.messageText.getText().toString().trim());
                     binding.msgTv.setText(binding.messageText.getText().toString().trim());
                     binding.messageText.setText("");
+
+
+
+
                 }
             }
         });
