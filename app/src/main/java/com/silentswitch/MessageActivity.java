@@ -28,8 +28,6 @@ public class MessageActivity extends AppCompatActivity {
                     binding.messageText.setText("");
 
 
-
-
                 }
             }
         });
